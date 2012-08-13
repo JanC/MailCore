@@ -84,6 +84,11 @@
 }
 
 - (struct mailmime *)buildMIMEStruct {
+
+    if(mMime != NULL) {
+        return  mMime;
+    }
+
     struct mailmime_fields *mime_fields;
     struct mailmime *mime_sub;
     struct mailmime_content *content;

@@ -79,7 +79,21 @@
 
 - (struct mailmime *)buildMIMEStruct {
     //TODO make this smarter so it builds different types other than multipart/mixed
-    struct mailmime *mime = mailmime_multiple_new("multipart/mixed");
+    if (!mContentType) {
+        mContentType = @"multipart/mixed";
+    }
+    struct mailmime *mime = mailmime_multiple_new([mContentType cStringUsingEncoding:NSUTF8StringEncoding]);
+
+    if (mContentType) {
+        struct mailmime_content *original_content  = mailmime_content_new_with_str([mContentType cStringUsingEncoding:NSUTF8StringEncoding]);
+        char * boundary =  mailmime_extract_boundary(original_content);
+        // the original content type already had a boundary; use this content type instead of the one from mailmime_multiple_new
+        if (boundary) {
+            mailmime_content_free(mime->mm_content_type);
+            mime->mm_content_type = original_content;
+        }
+    }
+
 
     NSEnumerator *enumer = [myContentList objectEnumerator];
 
