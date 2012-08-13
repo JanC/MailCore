@@ -29,6 +29,7 @@
  * SUCH DAMAGE.
  */
 
+#import <libetpan/libetpan.h>
 #import "CTMIME.h"
 
 #import "CTMIME_Enumerator.h"
@@ -43,6 +44,7 @@
         // We couldn't find a content-type, set it to something generic
         NSString *mainType = @"application";
         NSString *subType = @"octet-stream";
+        NSString *parameters = @"";   // e.g. charset=us-ascii
         if (mime != NULL && mime->mm_content_type != NULL) {
             struct mailmime_content *content = mime->mm_content_type;
             if (content->ct_type != NULL) {
@@ -82,8 +84,27 @@
                     }
                 }
             }
+
+            if (content->ct_parameters != NULL) {
+                clistiter * cur;
+                for(cur = clist_begin(content->ct_parameters) ;
+                    cur != NULL ;
+                    cur = clist_next(cur)) {
+                  struct mailmime_parameter * param;
+
+                  param = cur->data;
+
+
+                    NSString *paramName =  [NSString stringWithCString:param->pa_name encoding:NSUTF8StringEncoding];
+                    NSString *paramValue =  [NSString stringWithCString:param->pa_value encoding:NSUTF8StringEncoding];
+
+                    parameters = [parameters stringByAppendingFormat:@"; %@=\"%@\"", paramName, paramValue];
+                    NSLog(@"PARAMETERS %@", parameters);
+                    //parameters = @"";
+                }
+            }
         }
-        mContentType = [[NSString alloc] initWithFormat:@"%@/%@", mainType, subType];
+        mContentType = [[NSString alloc] initWithFormat:@"%@/%@%@", mainType, subType, parameters];
     }
     return self;
 }
