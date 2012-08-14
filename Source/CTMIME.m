@@ -99,7 +99,7 @@
                     NSString *paramValue =  [NSString stringWithCString:param->pa_value encoding:NSUTF8StringEncoding];
 
                     parameters = [parameters stringByAppendingFormat:@"; %@=\"%@\"", paramName, paramValue];
-                    NSLog(@"PARAMETERS %@", parameters);
+                    //NSLog(@"PARAMETERS %@", parameters);
                     //parameters = @"";
                 }
             }
