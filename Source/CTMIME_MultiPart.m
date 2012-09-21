@@ -60,6 +60,7 @@
     self = [super init];
     if (self) {
         myContentList = [[NSMutableArray alloc] init];
+        self.contentType = @"multipart/mixed";
     }
     return self;
 }
