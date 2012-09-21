@@ -133,7 +133,17 @@
     resultStr = [[NSString alloc] initWithBytes:str->str length:str->len
                     encoding:NSUTF8StringEncoding];
     mmap_string_free(str);
-    mailmime_free(mime);
+    mime->mm_data.mm_message.mm_fields = NULL;
+
+    // https://github.com/mronge/MailCore/issues/36
+    // JanC: I reuse the mime in CTMIME_XXPart:     if(mMime != NULL) { return  mMime; }
+    // that's why we cannot free it. This is a memory leak. Find a solution for this.
+    // I reuse it because when I construct a mime using
+    // mailmime_parse()
+    // then [CTMIMEFactory createMIMEWithMIMEStruct
+    // and I do not want this part to be modified. The headers of the part must stay as they are!
+    
+    //mailmime_free(mime);
     return [resultStr autorelease];
 }
 
