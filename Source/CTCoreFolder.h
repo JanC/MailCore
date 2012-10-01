@@ -223,11 +223,6 @@
 */
 - (BOOL)moveMessageWithUID:(NSUInteger)uid toPath:(NSString *)path;
 
-/**
- Appends a message to a folder
- @return Return YES on success, NO on error. Call method lastError to get error if one occurred
-*/
-- (BOOL)appendMessage:(CTCoreMessage *)msg;
 
 /**
  Returns the number of unread messages. This causes a round trip to the server, as it fetches
