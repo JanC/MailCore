@@ -592,6 +592,16 @@ int uid_list_to_env_list(clist * fetch_result, struct mailmessage_list ** result
         self.lastError = MailCoreCreateErrorFromIMAPCode(err);
         return NO;
     }
+
+    // Added by DK
+    // Ensure that flags are updated
+    err = mailfolder_expunge(myFolder);
+    if (err != MAIL_NO_ERROR) {
+        self.lastError = MailCoreCreateErrorFromIMAPCode(err);
+        return NO;
+    }
+
+
     return YES;
 }
 
